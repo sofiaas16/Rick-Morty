@@ -17,17 +17,47 @@ const cData = async () => {
 }
 const showData = async () => {
     const data = await cData();
-
-    setTimeout(() => {
-
-        data.forEach(element => {
-            viewHTML(element.image, element.name, element.status);
-        });
-
-    })
+    globalData = data;
+  
+    data.forEach(element => {
+        viewHTML(element.image, element.name, element.status);
+    });
+    renderCharacters(globalData);
+    
+    
 }
 
-const viewHTML = (srcImage, name,status, genero) =>{
+
+const renderCharacters = (data) => {
+    const div = document.querySelector("#div");
+    div.innerHTML = "";
+
+    data.forEach(element => {
+        viewHTML(element.image, element.name, element.status);
+    });
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    init();
+
+    const input = document.querySelector("#inputSearch");
+    const button = document.querySelector("#btnSearch");
+
+    button.addEventListener("click", () => {
+        const text = input.value.toLowerCase();
+
+        const filtered = globalData.filter(item =>
+            item.name.toLowerCase().includes(text)
+        );
+
+        renderCharacters(filtered);
+    });
+});
+
+
+
+
+const viewHTML = (srcImage, name,status) =>{
     const div = document.querySelector("#div");
     const divCart = document.createElement("DIV");
     const img = document.createElement("IMG");
@@ -54,6 +84,11 @@ const viewHTML = (srcImage, name,status, genero) =>{
 }
 
 const validateAlive = (p, status) => {
-    const allowed = ["Alive", "Dead", "unknown"];
-    allowed.includes(status) ? p.classList.add : p.classList.add("unknown");
-}
+    if (status === "Alive") {
+        p.classList.add("Alive");
+    } else if (status === "Dead") {
+        p.classList.add("Dead");
+    } else {
+        p.classList.add("unknown");
+    }
+};
